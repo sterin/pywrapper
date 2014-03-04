@@ -129,21 +129,21 @@ public:
 
     template<typename pytype2>
     ref(const ref<pytype2>& rhs) :
-        _p(rhs.get_cast<pytype>())
+        _p(rhs.template get_cast<pytype>())
     {
         Py_XINCREF(_p);
     }
 
     template<typename pytype2>
     ref(const borrowed_ref<pytype2>& rhs) :
-        _p(rhs.get_cast<pytype>())
+        _p(rhs.template get_cast<pytype>())
     {
         Py_XINCREF(_p);
     }
 
     template<typename pytype2>
     ref(const stolen_ref<pytype2>& rhs) :
-        _p(rhs.get_cast<pytype>())
+        _p(rhs.template get_cast<pytype>())
     {
         Py_XINCREF(_p);
     }
@@ -208,37 +208,37 @@ public:
     template<typename pytype2> const
     bool operator==(const ref<pytype2>& rhs)
     {
-        return _p == rhs.get_cast<pytype>();
+        return _p == rhs.template get_cast<pytype>();
     }
 
     template<typename pytype2> const
     bool operator!=(const ref<pytype2>& rhs)
     {
-        return _p != rhs.get_cast<pytype>();
+        return _p != rhs.template get_cast<pytype>();
     }
 
     template<typename pytype2> const
     bool operator==(const borrowed_ref<pytype2>& rhs)
     {
-        return _p == rhs.get_cast<pytype>();
+        return _p == rhs.template get_cast<pytype>();
     }
 
     template<typename pytype2> const
     bool operator!=(const borrowed_ref<pytype2>& rhs)
     {
-        return _p != rhs.get_cast<pytype>();
+        return _p != rhs.template get_cast<pytype>();
     }
 
     template<typename pytype2> const
     bool operator==(const stolen_ref<pytype2>& rhs)
     {
-        return _p == rhs.get_cast<pytype>();
+        return _p == rhs.template get_cast<pytype>();
     }
 
     template<typename pytype2> const
     bool operator!=(const stolen_ref<pytype2>& rhs)
     {
-        return _p != rhs.get_cast<pytype>();
+        return _p != rhs.template get_cast<pytype>();
     }
 
     operator bool() const
@@ -315,7 +315,7 @@ public:
 
     template<typename pytype2>
     borrowed_ref(const ref<pytype2>& rhs) :
-        _p(rhs.get_cast<pytype>())
+        _p(rhs.template get_cast<pytype>())
     {
     }
 
@@ -326,13 +326,13 @@ public:
 
     template<typename pytype2>
     borrowed_ref(const borrowed_ref<pytype2>& rhs) :
-        _p(rhs.get_cast<pytype>())
+        _p(rhs.template get_cast<pytype>())
     {
     }
 
     template<typename pytype2>
     borrowed_ref(const stolen_ref<pytype2>& rhs) :
-        _p(rhs.get_cast<pytype>())
+        _p(rhs.template get_cast<pytype>())
     {
     }
 
@@ -406,13 +406,13 @@ public:
 
     template<typename pytype2>
     stolen_ref(const ref<pytype2>& rhs) :
-        _p(const_cast<ref<pytype2>&>(rhs).release_cast<pytype>())
+        _p(const_cast<ref<pytype2>&>(rhs).template release_cast<pytype>())
     {
     }
 
     template<typename pytype2>
     stolen_ref(const borrowed_ref<pytype2>& rhs) :
-        _p(rhs.get_cast<pytype>())
+        _p(rhs.template get_cast<pytype>())
     {
         Py_XINCREF(_p);
     }
@@ -424,7 +424,7 @@ public:
 
     template<typename pytype2>
     stolen_ref(const stolen_ref<pytype2>& rhs) :
-        _p(const_cast<stolen_ref<pytype2>&>(rhs).release_cast<pytype>())
+        _p(const_cast<stolen_ref<pytype2>&>(rhs).template release_cast<pytype>())
     {
     }
 

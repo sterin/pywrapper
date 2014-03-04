@@ -244,7 +244,7 @@ int objobjproc(PyObject* self, PyObject* key)
 }
 
 template<typename P, int (P::*F)(PyObject* key, PyObject* value)>
-PyObject* objobjargproc(PyObject* self, PyObject* key, PyObject* value)
+int objobjargproc(PyObject* self, PyObject* key, PyObject* value)
 {
     assert( self );
 
