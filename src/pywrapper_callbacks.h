@@ -463,13 +463,13 @@ PyObject* meth_keywords(PyObject* self_, PyObject* args, PyObject* kwds)
     return NULL;
 }
 
-template<typename S, void (S::*F)(PyObject*)>
+template<typename S, void (S::*F)(borrowed_ref<PyObject>)>
 int setter(PyObject* self_, PyObject* value, void *)
 {
     try
     {
         S* self = reinterpret_cast<S*>(self_);
-        (self->*F)(value);
+        (self->*F)(borrowed_ref<PyObject>(value));
         return 0;
     }
     PYTHONWRAPPER_CATCH
