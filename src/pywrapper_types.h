@@ -4,7 +4,19 @@
 namespace py
 {
 
-template<typename user_type>
+class object_header
+{
+public:
+    PyObject_HEAD
+};
+
+class heap_type_header
+{
+public:
+    PyHeapTypeObject _o;
+};
+
+template<typename user_type, typename header_type=object_header>
 class type_base
 {
 public:
@@ -144,7 +156,7 @@ public:
 
 private:
 
-    PyObject_HEAD
+    header_type _header;
 
     static ref<user_type> alloc()
     {
@@ -154,16 +166,15 @@ private:
     }
 };
 
-
-template<typename user_type>
-PyTypeObject type_base<user_type>::_type = {
+template<typename user_type, typename header_type>
+PyTypeObject type_base<user_type, header_type>::_type = {
     PyObject_HEAD_INIT(NULL)
     0
 };
 
-template<typename user_type>
+template<typename user_type, typename header_type=object_header>
 class type_base_with_new :
-    public type_base<user_type>
+    public type_base<user_type, header_type>
 {
 public:
 
@@ -193,11 +204,12 @@ public:
         return p.release();
     }
 
-    typedef type_base_with_new<user_type> base;
+    typedef type_base_with_new<user_type, header_type> base;
 };
 
-template<typename user_metatype>
-class metatype_base
+template<typename user_type>
+class metatype_base :
+    public type_base<user_type, heap_type_header>
 {
 public:
 
@@ -211,41 +223,10 @@ public:
 
     static void initialize(const char* tp_name, PyTypeObject* supertype=&PyType_Type)
     {
-        _supertype = supertype;
-
-        _type.tp_name = tp_name;
-        _type.tp_basicsize = sizeof(user_metatype);
-        _type.tp_base = _supertype;
-        _type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
-
-        _type.tp_dealloc = wrappers::destructor<user_metatype>;
-
-        PyType_Ready(&_type);
+        type_base<user_type, heap_type_header>::initialize(tp_name, supertype);
     }
 
-    static void tp_dealloc(user_metatype* d)
-    {
-        d->~user_metatype();
-        _supertype->tp_dealloc(reinterpret_cast<PyObject*>(d));
-    }
-
-    static PyTypeObject* _supertype;
-    static PyTypeObject _type;
-
-    typedef metatype_base<user_metatype> base;
-
-private:
-
-    PyHeapTypeObject _heaptype;
-};
-
-template<typename user_metatype>
-PyTypeObject* metatype_base<user_metatype>::_supertype;
-
-template<typename user_metatype>
-PyTypeObject metatype_base<user_metatype>::_type = {
-    PyObject_HEAD_INIT(NULL)
-    0
+    typedef metatype_base<user_type> base;
 };
 
 } // namespace py
