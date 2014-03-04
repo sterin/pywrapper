@@ -49,11 +49,9 @@ public:
 
     static void initialize(const char* tp_name, PyTypeObject* supertype=&PyBaseObject_Type)
     {
-        _supertype = supertype;
-
         _type.tp_name = tp_name;
         _type.tp_basicsize = sizeof(user_type);
-        _type.tp_base = _supertype;
+        _type.tp_base = supertype;
         _type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
 
         _type.tp_dealloc = wrappers::destructor<user_type>;
@@ -69,7 +67,7 @@ public:
     static void tp_dealloc(user_type* d)
     {
         d->~user_type();
-        _supertype->tp_dealloc(reinterpret_cast<PyObject*>(d));
+        _type.tp_base->tp_dealloc(reinterpret_cast<PyObject*>(d));
     }
 
 //    static ref<user_type> build()
@@ -140,7 +138,6 @@ public:
         return p;
     }
 
-    static PyTypeObject* _supertype;
     static PyTypeObject _type;
 
     typedef type_base<user_type> base;
@@ -157,8 +154,6 @@ private:
     }
 };
 
-template<typename user_type>
-PyTypeObject* type_base<user_type>::_supertype;
 
 template<typename user_type>
 PyTypeObject type_base<user_type>::_type = {
