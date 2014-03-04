@@ -21,6 +21,44 @@ class type_base
 {
 public:
 
+    class incomplete_object_holder
+    {
+    public:
+
+        explicit incomplete_object_holder(user_type* p) :
+            _p(p)
+        {
+        }
+
+        explicit incomplete_object_holder(PyObject* p) :
+            _p( reinterpret_cast<user_type*>(p) )
+        {
+        }
+
+        ~incomplete_object_holder()
+        {
+            if(_p)
+            {
+                _type.tp_base->tp_dealloc(reinterpret_cast<PyObject*>(_p));
+            }
+        }
+
+        operator user_type*()
+        {
+            return _p;
+        }
+
+        user_type* release()
+        {
+            user_type* p = _p;
+            _p = 0;
+            return p;
+        }
+
+    private:
+        user_type* _p;
+    };
+
     type_base()
     {
     }
@@ -85,21 +123,21 @@ public:
     template<typename... Ts>
     static ref<user_type> build(const Ts&... ts)
     {
-        ref<user_type> p = alloc();
+        incomplete_object_holder p( alloc() );
 
         new (p) user_type(ts...);
 
-        return p;
-    }
+        return ref<user_type>(p.release());
+   }
 
     template<typename T, typename... Ts>
     static ref<user_type> build(T& t, Ts&... ts)
     {
-        ref<user_type> p = alloc();
+        incomplete_object_holder p( alloc() );
 
         new (p) user_type(t, ts...);
 
-        return p;
+        return ref<user_type>(p.release());
     }
 
     static PyTypeObject _type;
@@ -110,9 +148,9 @@ private:
 
     header_type _header;
 
-    static ref<user_type> alloc()
+    static user_type* alloc()
     {
-        ref<user_type> p( _type.tp_alloc(&_type, 0) );
+        user_type* p = reinterpret_cast<user_type*>( _type.tp_alloc(&_type, 0) );
         exception::check();
         return p;
     }
@@ -148,7 +186,7 @@ public:
 
     static user_type* tp_new(PyTypeObject *subtype, PyObject *args, PyObject *kwds)
     {
-        ref<user_type> p( user_type::base_construct(subtype, args, kwds) );
+        typename type_base<user_type>::incomplete_object_holder p ( reinterpret_cast<user_type*>(user_type::base_construct(subtype, args, kwds) ) );
         exception::check();
 
         user_type::construct(p, args, kwds);
