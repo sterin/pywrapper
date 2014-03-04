@@ -159,7 +159,7 @@ PyObject* mp_subscript(PyObject* self, PyObject* key)
     return NULL;
 }
 
-template<typename P, int (P::*F)(PyObject*, PyObject*)>
+template<typename P, void (P::*F)(PyObject*, PyObject*)>
 int mp_ass_subscript(PyObject* self, PyObject* key, PyObject* val)
 {
     assert( self );
@@ -168,7 +168,9 @@ int mp_ass_subscript(PyObject* self, PyObject* key, PyObject* val)
     {
         P* p = reinterpret_cast<P*>(self);
 
-        return (p->*F)(key, val);
+        (p->*F)(key, val);
+
+        return 0;
     }
     PYTHONWRAPPER_CATCH
 
