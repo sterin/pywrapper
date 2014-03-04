@@ -91,6 +91,21 @@ struct exception
             throw exception();
         }
     }
+
+    static bool matches(PyObject* e)
+    {
+        return PyErr_ExceptionMatches(e);
+    }
+
+    static void handle(PyObject* e)
+    {
+        if( ! matches(e) )
+        {
+            throw exception();
+        }
+
+        clear();
+    }
 };
 
 template<typename pytype=PyObject>
