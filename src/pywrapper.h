@@ -7,7 +7,7 @@
 
 #include <Python.h>
 
-#define for_py_iterator(sequence, pyitem) \
+#define pywrapper_for_iterator(sequence, pyitem) \
     for( ref<PyObject> iter = py::Object_GetIter(sequence) ; ref<PyObject> pyitem = py::Iter_Next(iter) ; )
 
 namespace py
