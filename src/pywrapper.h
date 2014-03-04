@@ -1,11 +1,11 @@
 #ifndef PYTHONWRAPPER__H
 #define PYTHONWRAPPER__H
 
+#include <Python.h>
+
 #include <exception>
 #include <new>
 #include <cstdarg>
-
-#include <Python.h>
 
 #define pywrapper_for_iterator(sequence, pyitem) \
     for( ref<PyObject> iter = py::Object_GetIter(sequence) ; ref<PyObject> pyitem = py::Iter_Next(iter) ; )
@@ -572,9 +572,6 @@ exception::format(PyObject* type, const char* format, ...)
 } // namespace py
 
 #include "pywrapper_embed.h"
-#include "pywrapper_callbacks.h"
 #include "pywrapper_object.h"
-#include "pywrapper_types.h"
-// namespace py
 
 #endif // PYTHONWRAPPER__H

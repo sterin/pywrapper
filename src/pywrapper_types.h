@@ -1,6 +1,8 @@
 #ifndef PYTHONWRAPPER_TYPES__H
 #define PYTHONWRAPPER_TYPES__H
 
+#include "pywrapper_callbacks.h"
+
 namespace py
 {
 
