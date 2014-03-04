@@ -66,7 +66,7 @@ public:
         _type.tp_base = supertype;
         _type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
 
-        _type.tp_dealloc = wrappers::destructor<user_type>;
+        _type.tp_dealloc = wrappers::destructor<user_type, &user_type::tp_dealloc>;
 
         PyType_Ready(&_type);
     }

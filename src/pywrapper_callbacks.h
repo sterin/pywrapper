@@ -59,12 +59,12 @@ PyObject* reprfunc(PyObject* self)
     return NULL;
 }
 
-template<typename P>
+template<typename P, void (*F)(P*)>
 void destructor(PyObject* p)
 {
     try
     {
-        P::tp_dealloc(reinterpret_cast<P*>(p));
+        F(reinterpret_cast<P*>(p));
     }
     PYTHONWRAPPER_CATCH
 }
