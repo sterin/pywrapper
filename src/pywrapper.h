@@ -549,6 +549,7 @@ expr_type safe_noref(expr_type expr)
 const static borrowed_ref<PyObject> None(Py_None);
 const static borrowed_ref<PyObject> True(Py_True);
 const static borrowed_ref<PyObject> False(Py_False);
+const static borrowed_ref<PyObject> NotImplemented(Py_NotImplemented);
 
 } // namespace py
 
