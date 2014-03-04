@@ -82,54 +82,6 @@ public:
         _type.tp_base->tp_dealloc(reinterpret_cast<PyObject*>(d));
     }
 
-//    static ref<user_type> build()
-//    {
-//        ref<user_type> p = alloc();
-//
-//        new (p) user_type();
-//
-//        return p;
-//    }
-//
-//    template<typename T1>
-//    static ref<user_type> build(const T1& t1)
-//    {
-//        ref<user_type> p = alloc();
-//
-//        new (p) user_type(t1);
-//
-//        return p;
-//    }
-//
-//    template<typename T1>
-//    static ref<user_type> build(T1& t1)
-//    {
-//        ref<user_type> p = alloc();
-//
-//        new (p) user_type(t1);
-//
-//        return p;
-//    }
-//    template<typename T1, typename T2>
-//    static ref<user_type> build(T1& t1, T2& t2)
-//    {
-//        ref<user_type> p = alloc();
-//
-//        new (p) user_type(t1, t2);
-//
-//        return p;
-//    }
-//
-//    template<typename T1, typename T2, typename T3>
-//    static ref<user_type> build(T1& t1, T2& t2, T3& t3)
-//    {
-//        ref<user_type> p = alloc();
-//
-//        new (p) user_type(t1, t2, t3);
-//
-//        return p;
-//    }
-
     template<typename... Ts>
     static ref<user_type> build(const Ts&... ts)
     {
