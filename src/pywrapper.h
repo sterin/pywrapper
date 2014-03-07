@@ -6,6 +6,7 @@
 #include <exception>
 #include <new>
 #include <cstdarg>
+#include <cassert>
 
 #define pywrapper_for_iterator(sequence, pyitem) \
     for( \
