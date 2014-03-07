@@ -38,6 +38,14 @@
 #define PYTHONWRAPPER_METH_VARARGS(class_name, func_name, flags, docstring) \
     { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_varargs<class_name, &class_name::func_name>)), METH_VARARGS | (flags), docstring }
 
+#define PYTHONWRAPPER_FUNC_VARARGS(func_name, flags, docstring) \
+    { \
+        #func_name, \
+        reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_varargs<func_name>)), \
+        METH_VARARGS | (flags), \
+        docstring \
+    }
+
 
 namespace py
 {
@@ -324,6 +332,20 @@ PyObject* descrgetfunc(PyObject *self, PyObject *obj, PyObject *type)
                 reinterpret_cast<T*>(type)
             )
         );
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
+}
+
+
+template<ref<PyObject> (*F)(PyObject*)>
+PyObject* meth_varargs(PyObject* self_, PyObject* args_)
+{
+    try
+    {
+        ref<PyObject> res = F(args_);
+        return res.release();
     }
     PYTHONWRAPPER_CATCH
 
