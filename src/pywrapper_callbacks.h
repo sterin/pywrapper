@@ -46,6 +46,29 @@
         docstring \
     }
 
+#define PYTHONWRAPPER_GETSET(pymember_name, class_name, getter_name, setter_name, docstring) \
+    { \
+        #pymember_name, \
+        reinterpret_cast<getter>(wrappers::getter<class_name, &class_name::getter_name>), \
+        reinterpret_cast<setter>(wrappers::setter<class_name, &class_name::setter_name>), \
+        docstring \
+    }
+
+#define PYTHONWRAPPER_GETTER(pymember_name, class_name, getter_name, docstring) \
+    { \
+        #pymember_name, \
+        reinterpret_cast<getter>(wrappers::getter<class_name, &class_name::getter_name>), \
+        0, \
+        docstring \
+    }
+
+#define PYTHONWRAPPER_SETTER(pymember_name, class_name, setter_name, docstring) \
+    { \
+        #pymember_name, \
+        0, \
+        reinterpret_cast<setter>(wrappers::setter<class_name, &class_name::setter_name>), \
+        docstring \
+    }
 
 namespace py
 {
