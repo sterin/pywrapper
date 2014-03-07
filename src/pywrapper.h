@@ -189,7 +189,7 @@ public:
     {
         Py_XINCREF(rhs.get());
         Py_XDECREF(_p);
-        _p = reinterpret_cast<pytype2*>(rhs.get());
+        _p = reinterpret_cast<pytype*>(rhs.get());
         return *this;
     }
 
@@ -198,7 +198,7 @@ public:
     {
         Py_XINCREF(rhs.get());
         Py_XDECREF(_p);
-        _p = reinterpret_cast<pytype2*>(rhs.get());
+        _p = reinterpret_cast<pytype*>(rhs.get());
         return *this;
     }
 
@@ -207,7 +207,7 @@ public:
     {
         Py_XINCREF(rhs.get());
         Py_XDECREF(_p);
-        _p = reinterpret_cast<pytype2*>(rhs.get());
+        _p = reinterpret_cast<pytype*>(rhs.get());
         return *this;
     }
 
