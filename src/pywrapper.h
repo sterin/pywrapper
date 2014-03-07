@@ -8,7 +8,10 @@
 #include <cstdarg>
 
 #define pywrapper_for_iterator(sequence, pyitem) \
-    for( ref<PyObject> __iter__ ## sequence ## ___ ## pyitem = py::Object_GetIter(sequence) ; ref<PyObject> pyitem = py::Iter_Next(__iter__ ## sequence ## ___ ## pyitem) ; )
+    for( \
+        ref<PyObject> __iter__ ## sequence ## ___ ## pyitem = py::Object_GetIter(sequence) ; \
+        ref<PyObject> pyitem = py::Iter_Next(__iter__ ## sequence ## ___ ## pyitem) ;\
+        )
 
 namespace py
 {
