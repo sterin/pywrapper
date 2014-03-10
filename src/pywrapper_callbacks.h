@@ -46,6 +46,14 @@
         docstring \
     }
 
+#define PYTHONWRAPPER_FUNC_KEYWORDS(func_name, flags, docstring) \
+    { \
+        #func_name, \
+        reinterpret_cast<PyCFunction>(static_cast<PyCFunctionWithKeywords>(wrappers::meth_keywords<func_name>)), \
+        METH_KEYWORDS | (flags), \
+        docstring \
+    }
+
 #define PYTHONWRAPPER_GETSET(pymember_name, class_name, getter_name, setter_name, docstring) \
     { \
         #pymember_name, \
@@ -477,6 +485,20 @@ PyObject* meth_noargs(PyObject* self_)
 
     return NULL;
 }
+
+template<ref<PyObject> (*F)(PyObject*, PyObject*)>
+PyObject* meth_keywords(PyObject* self_, PyObject* args, PyObject* kwds)
+{
+    try
+    {
+        ref<PyObject> res = (*F)(args, kwds);
+        return res.release();
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
+}
+
 
 template<typename S, ref<PyObject> (S::*F)(PyObject*, PyObject*)>
 PyObject* meth_keywords(PyObject* self_, PyObject* args, PyObject* kwds)
