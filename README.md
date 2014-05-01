@@ -56,4 +56,4 @@ Similar to ```ref<T>```, ownership can be released using the release methods.
 
 The main use of ```borrowed_ref``` and ```stolen_ref``` is in function arguments, especially the wrappers around the Python C/API functions, where it encodes the usage rules of the API. 
 
-TO BE CONTINNUED
+TO BE CONTINUED
