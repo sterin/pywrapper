@@ -57,15 +57,15 @@
 #define PYTHONWRAPPER_GETSET(pymember_name, class_name, getter_name, setter_name, docstring) \
     { \
         #pymember_name, \
-        reinterpret_cast<getter>(wrappers::getter<class_name, &class_name::getter_name>), \
-        reinterpret_cast<setter>(wrappers::setter<class_name, &class_name::setter_name>), \
+        wrappers::getter<class_name, &class_name::getter_name>, \
+        wrappers::setter<class_name, &class_name::setter_name>, \
         docstring \
     }
 
 #define PYTHONWRAPPER_GETTER(pymember_name, class_name, getter_name, docstring) \
     { \
         #pymember_name, \
-        reinterpret_cast<getter>(wrappers::getter<class_name, &class_name::getter_name>), \
+        wrappers::getter<class_name, &class_name::getter_name>, \
         0, \
         docstring \
     }
@@ -74,7 +74,7 @@
     { \
         #pymember_name, \
         0, \
-        reinterpret_cast<setter>(wrappers::setter<class_name, &class_name::setter_name>), \
+        wrappers::setter<class_name, &class_name::setter_name>, \
         docstring \
     }
 
