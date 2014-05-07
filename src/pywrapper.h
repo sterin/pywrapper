@@ -360,13 +360,31 @@ public:
     }
 
     template<typename pytype2>
-    bool operator==(pytype2* rhs)
+    bool operator==(pytype2* rhs) const
     {
-        return reinterpret_cast<pytype>(rhs)==_p;
+        return reinterpret_cast<pytype*>(rhs)==_p;
     }
 
     template<typename pytype2>
-    bool operator!=(pytype2* rhs)
+    bool operator==(ref<pytype2> rhs) const
+    {
+        return reinterpret_cast<pytype*>(rhs._p)==_p;
+    }
+
+    template<typename pytype2>
+    bool operator==(borrowed_ref<pytype2> rhs) const
+    {
+        return reinterpret_cast<pytype*>(rhs._p)==_p;
+    }
+
+    template<typename pytype2>
+    bool operator==(stolen_ref<pytype2> rhs) const
+    {
+        return reinterpret_cast<pytype*>(rhs._p)==_p;
+    }
+
+    template<typename pytype2>
+    bool operator!=(pytype2* rhs) const
     {
         return reinterpret_cast<pytype>(rhs)!=_p;
     }
@@ -456,6 +474,24 @@ public:
     bool operator==(pytype2* rhs) const
     {
         return reinterpret_cast<pytype>(rhs)==_p;
+    }
+
+    template<typename pytype2>
+    bool operator==(ref<pytype2> rhs) const
+    {
+        return reinterpret_cast<pytype*>(rhs._p)==_p;
+    }
+
+    template<typename pytype2>
+    bool operator==(borrowed_ref<pytype2> rhs) const
+    {
+        return reinterpret_cast<pytype*>(rhs._p)==_p;
+    }
+
+    template<typename pytype2>
+    bool operator==(stolen_ref<pytype2> rhs) const
+    {
+        return reinterpret_cast<pytype*>(rhs._p)==_p;
     }
 
     template<typename pytype2>
