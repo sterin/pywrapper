@@ -609,6 +609,17 @@ exception::format(PyObject* type, const char* format, ...)
       return exception(type, message);
 }
 
+template<typename F>
+void for_iterator(PyObject* sequence, F f)
+{
+    ref <PyObject> iter = Object_GetIter(sequence);
+
+    while( ref<PyObject> item = Iter_Next(iter) )
+    {
+        f(item);
+    }
+}
+
 } // namespace py
 
 #include "pywrapper_embed.h"
