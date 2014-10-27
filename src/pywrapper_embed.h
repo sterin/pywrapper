@@ -14,8 +14,8 @@ public:
 			Py_SetProgramName(name);
 		}
 
-		PyEval_InitThreads();
 		Py_InitializeEx(initsigs);
+        PyEval_InitThreads();
 	}
 
 	~initialize()
