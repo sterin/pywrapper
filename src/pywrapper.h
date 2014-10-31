@@ -20,6 +20,13 @@ namespace py
 namespace utils
 {
 
+struct noncopyable
+{
+    noncopyable() = default;
+    noncopyable(const noncopyable&) = delete;
+    noncopyable& operator=(const noncopyable&) = delete;
+};
+
 class va_list_wrapper
 {
 public:

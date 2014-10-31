@@ -9,47 +9,8 @@
 namespace py
 {
 
-struct noncopyable
-{
-    noncopyable() = default;
-    noncopyable(const noncopyable&) = delete;
-    noncopyable& operator=(const noncopyable&) = delete;
-};
-
-class enable_threads :
-    noncopyable
-{
-public:
-    enable_threads() :
-        _state(PyEval_SaveThread())
-    {
-    }
-
-    ~enable_threads()
-    {
-        disable();
-    }
-
-    void disable()
-    {
-        if( _state )
-        {
-            PyEval_RestoreThread(_state);
-            _state = 0;
-        }
-    }
-
-    PyThreadState* state()
-    {
-        return _state;
-    }
-
-private:
-    PyThreadState* _state;
-};
-
 class gil_lock :
-    noncopyable
+    utils::noncopyable
 {
 public:
     gil_lock()
@@ -77,39 +38,8 @@ private:
     bool _held;
 };
 
-class gil_state_ensure :
-    noncopyable
-{
-public:
-    gil_state_ensure() :
-        _state(PyGILState_Ensure()),
-        _held(true)
-    {
-
-    }
-
-    ~gil_state_ensure()
-    {
-        release();
-    }
-
-    void release()
-    {
-        if(_held)
-        {
-            PyGILState_Release(_state);
-            _held = false;
-        }
-    }
-
-private:
-
-    PyGILState_STATE _state;
-    bool _held;
-};
-
 class restore_tstate :
-    noncopyable
+    utils::noncopyable
 {
 public:
     restore_tstate()
@@ -127,7 +57,7 @@ private:
 };
 
 class swap_tstate :
-    noncopyable
+    utils::noncopyable
 {
 public:
     swap_tstate(PyThreadState* ts)
@@ -151,7 +81,7 @@ void F(C&& _C, T... _T)
 }
 
 class thread_state :
-    noncopyable
+    utils::noncopyable
 {
 public:
 
@@ -181,12 +111,12 @@ private:
 };
 
 class sub_interpreter :
-    noncopyable
+    utils::noncopyable
 {
 public:
 
     struct thread_scope :
-        noncopyable
+        utils::noncopyable
     {
         gil_lock _lock;
         thread_state _state;
