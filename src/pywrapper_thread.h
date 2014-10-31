@@ -4,6 +4,7 @@
 #include "pywrapper_callbacks.h"
 
 #include <thread>
+#include <tuple>
 
 namespace py
 {
@@ -143,6 +144,12 @@ private:
     PyThreadState* _ts;
 };
 
+template<typename C, typename... T>
+void F(C&& _C, T... _T)
+{
+    _C(std::forward<T>(_T)...);
+}
+
 class thread_state :
     noncopyable
 {
@@ -224,24 +231,91 @@ public:
         return _ts->interp;
     }
 
-    template<typename callable_type, typename... arg_types>
-    std::thread make_thread(callable_type&& callable, arg_types&&... args)
+    // based on http://stackoverflow.com/a/7858971/99279
+    // all because earlier version of g++ cannot unpack in a lambda
+    template <typename C, typename ...A>
+    class delay_call
     {
-        auto f = [&, this]()
+
+        template<int ...>
+        struct int_seq
         {
-            sub_interpreter::thread_scope scope(interp());
+        };
+
+        template<int N, int ...S>
+        struct gen_seq :
+            gen_seq<N-1, N-1, S...>
+        {
+        };
+
+        template<int ...S>
+        struct gen_seq<0, S...>
+        {
+            typedef int_seq<S...> type;
+        };
+
+    public:
+
+        delay_call(PyInterpreterState* interp, C&& c, A&&... a) :
+            _interp(interp),
+            _c(std::forward<C>(c)),
+            _a(std::forward<A>(a)...)
+        {
+
+        }
+
+        void operator()()
+        {
+            sub_interpreter::thread_scope scope(_interp);
 
             try
             {
-                callable(std::forward<arg_types>(args)...);
+                call(typename gen_seq<sizeof...(A)>::type());
             }
             catch(exception &e)
             {
                 Err_PrintEx(1);
             }
-        };
+        }
 
-        return std::thread(f);
+    private:
+
+        template<int ...S>
+        void call(int_seq<S...>)
+        {
+            std::forward<C>(_c)(std::forward<A>(std::get<S>(_a))...);
+        }
+
+        PyInterpreterState* _interp;
+        C&& _c;
+        std::tuple<A&&...> _a;
+    };
+
+    template<typename C, typename... A>
+    static delay_call<C,A...> delay(PyInterpreterState* interp, C&& c, A&&... a)
+    {
+        return delay_call<C,A...>(interp, std::forward<C>(c), std::forward<A>(a)...);
+    }
+
+    template<typename callable_type, typename... arg_types>
+    std::thread make_thread(callable_type&& callable, arg_types&&... args)
+    {
+//        auto f = [&, this]()
+//        {
+//            sub_interpreter::thread_scope scope(interp());
+//
+//            try
+//            {
+//                callable(std::forward<arg_types>(args)...);
+//            }
+//            catch(exception &e)
+//            {
+//                Err_PrintEx(1);
+//            }
+//        };
+//
+
+        return std::thread(delay(interp(), callable, args...));
     }
 
 private:
