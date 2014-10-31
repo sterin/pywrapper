@@ -38,6 +38,22 @@
 #define PYTHONWRAPPER_METH_VARARGS(class_name, func_name, flags, docstring) \
     { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_varargs<class_name, &class_name::func_name>)), METH_VARARGS | (flags), docstring }
 
+#define PYTHONWRAPPER_FUNC_O(func_name, flags, docstring) \
+    { \
+        #func_name, \
+        reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_o<func_name>)), \
+        METH_O | (flags), \
+        docstring \
+    }
+
+#define PYTHONWRAPPER_FUNC_NOARGS(func_name, flags, docstring) \
+    { \
+        #func_name, \
+        reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_noargs<func_name>)), \
+        METH_NOARGS | (flags), \
+        docstring \
+    }
+
 #define PYTHONWRAPPER_FUNC_VARARGS(func_name, flags, docstring) \
     { \
         #func_name, \
@@ -426,6 +442,19 @@ PyObject* meth_o(PyObject*, PyObject* o)
     return NULL;
 }
 
+template<ref<PyObject> (*F)(PyObject*)>
+PyObject* meth_o(PyObject*, PyObject* o)
+{
+    try
+    {
+        ref<PyObject> res = (*F)(o);
+        return res.release();
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
+}
+
 template<typename S, ref<PyObject> (S::*F)(PyObject*)>
 PyObject* meth_o(PyObject* self_, PyObject* o)
 {
@@ -470,6 +499,19 @@ PyObject* meth_noargs(PyObject* self_)
     return NULL;
 }
 
+template<ref<PyObject> (*F)()>
+PyObject* meth_noargs(PyObject*, PyObject*)
+{
+    try
+    {
+        ref<PyObject> res = F();
+        return res.release();
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
+}
+
 template<typename S, void (S::*F)()>
 PyObject* meth_noargs(PyObject* self_)
 {
@@ -499,6 +541,18 @@ PyObject* meth_keywords(PyObject* self_, PyObject* args, PyObject* kwds)
     return NULL;
 }
 
+template<void (*F)(PyObject*, PyObject*)>
+PyObject* meth_keywords(PyObject* self_, PyObject* args, PyObject* kwds)
+{
+    try
+    {
+        (*F)(args, kwds);
+        Py_RETURN_NONE;
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
+}
 
 template<typename S, ref<PyObject> (S::*F)(PyObject*, PyObject*)>
 PyObject* meth_keywords(PyObject* self_, PyObject* args, PyObject* kwds)
