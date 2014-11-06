@@ -123,7 +123,8 @@ public:
         swap_tstate _swap;
 
         thread_scope(const sub_interpreter& interp) :
-            thread_scope(interp.interp())
+	    _state(interp.interp()),
+	    _swap(_state)
         {
         }
 
