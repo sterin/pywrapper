@@ -442,6 +442,19 @@ PyObject* meth_o(PyObject*, PyObject* o)
     return NULL;
 }
 
+template<void (*F)(PyObject*)>
+PyObject* meth_o(PyObject*, PyObject* o)
+{
+    try
+    {
+        (*F)(o);
+        Py_RETURN_NONE;
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
+}
+
 template<ref<PyObject> (*F)(PyObject*)>
 PyObject* meth_o(PyObject*, PyObject* o)
 {
@@ -493,6 +506,19 @@ PyObject* meth_noargs(PyObject* self_)
         S* self = reinterpret_cast<S*>(self_);
         ref<PyObject> res = (self->*F)();
         return res.release();
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
+}
+
+template<void (*F)()>
+PyObject* meth_noargs(PyObject*, PyObject*)
+{
+    try
+    {
+        F();
+        Py_RETURN_NONE;
     }
     PYTHONWRAPPER_CATCH
 
