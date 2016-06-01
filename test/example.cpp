@@ -3,13 +3,12 @@
 #include <iostream>
 
 using namespace py;
-using namespace std;
 
 int
 main(int argc, char *argv[])
 {
     if (argc < 3) {
-        cerr << "Usage: call pythonfile funcname [args]" << endl;
+        std::cerr << "Usage: call pythonfile funcname [args]" << std::endl;
         return 1;
     }
 
@@ -27,18 +26,18 @@ main(int argc, char *argv[])
 			for (int i = 0; i < argc - 3; ++i)
 			{
 				ref<PyObject> value = Int_FromString(argv[i + 3], 0, 10);
-				cout << "value= " << value.get() << endl;;
+				std::cout << "value= " << value.get() << std::endl;;
 				Tuple_SetItem(args, i, value);
-				cout << "value= " << value.get() << endl;;
+				std::cout << "value= " << value.get() << std::endl;;
 			}
 
 			ref<PyObject> value = Object_CallObject(func, args);
-			cout << "Result of call: " << Int_AsLong(value) << endl;;
+			std::cout << "Result of call: " << Int_AsLong(value) << std::endl;;
 		}
     }
 	catch(py::exception& e)
 	{
-        cout << "exception:" << endl;
+        std::cout << "exception:" << std::endl;
 		Err_PrintEx(1);
 	}
 

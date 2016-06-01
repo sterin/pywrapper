@@ -35,7 +35,7 @@ static inline ref<PyObject> Tuple_PackV(Py_ssize_t n, va_list vargs)
 static inline ref<PyObject> Tuple_Pack(Py_ssize_t n, ...)
 {
     utils::va_list_wrapper vargs;
-    va_start(vargs, n);
+    va_start(vargs.get(), n);
 
     return Tuple_PackV(n, vargs);
 }
@@ -43,7 +43,7 @@ static inline ref<PyObject> Tuple_Pack(Py_ssize_t n, ...)
 static inline int Arg_ParseTuple(PyObject *args, const char *format, ...)
 {
     utils::va_list_wrapper vargs;
-    va_start(vargs, format);
+    va_start(vargs.get(), format);
 
     return Arg_VaParse(args, format, vargs);
 }
@@ -51,7 +51,7 @@ static inline int Arg_ParseTuple(PyObject *args, const char *format, ...)
 static inline int Arg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const char *format, char *keywords[], ...)
 {
 	utils::va_list_wrapper vargs;
-	va_start(vargs, keywords);
+	va_start(vargs.get(), keywords);
 
     return Arg_VaParseTupleAndKeywords(args, kw, format, keywords, vargs);
 }
@@ -59,7 +59,7 @@ static inline int Arg_ParseTupleAndKeywords(PyObject *args, PyObject *kw, const 
 static inline ref<PyObject> BuildValue(const char *format, ...)
 {
 	utils::va_list_wrapper vargs;
-	va_start(vargs, format);
+	va_start(vargs.get(), format);
 
     return VaBuildValue(format, vargs);
 }
@@ -72,7 +72,7 @@ static inline ref<PyObject> Object_CallFunctionV(PyObject *callable,  char* form
 static inline ref<PyObject> Object_CallFunction(PyObject *callable,  char *format,  ...)
 {
     utils::va_list_wrapper vargs;
-    va_start(vargs, format);
+    va_start(vargs.get(), format);
 
     return Object_CallFunctionV(callable, format, vargs);
 }
@@ -97,7 +97,7 @@ static inline ref<PyObject> Object_CallMethodV(PyObject *o, char *name, char *fo
 static inline ref<PyObject> Object_CallMethod(PyObject *o, char *name, char *format, ...)
 {
     utils::va_list_wrapper vargs;
-    va_start(vargs, format);
+    va_start(vargs.get(), format);
 
     return Object_CallMethodV(o, name, format, vargs);
 }
@@ -131,7 +131,7 @@ static inline ref<PyObject> Object_CallFunctionObjArgsV(PyObject *callable, va_l
 static inline ref<PyObject> Object_CallFunctionObjArgs(PyObject *callable, ...)
 {
     utils::va_list_wrapper vargs;
-    va_start(vargs, callable);
+    va_start(vargs.get(), callable);
 
     return Object_CallFunctionObjArgsV(callable, vargs);
 }
@@ -158,7 +158,7 @@ static inline ref<PyObject> Object_CallMethodObjArgsV(PyObject *o,  PyObject *na
 static inline ref<PyObject> Object_CallMethodObjArgs(PyObject *o,  PyObject *name,  ...)
 {
     utils::va_list_wrapper args;
-    va_start(args, name);
+    va_start(args.get(), name);
 
     return Object_CallMethodObjArgsV(o, name, args) ;
 }
@@ -173,7 +173,7 @@ static inline Py_ssize_t Object_Size(PyObject *o)
 static inline ref<PyObject> Unicode_FromFormat(const char *format, ...)
 {
     utils::va_list_wrapper vargs;
-    va_start(vargs, format);
+    va_start(vargs.get(), format);
 
     return safe_ref(PyUnicode_FromFormatV(format, vargs));
 }
