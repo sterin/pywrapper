@@ -9,7 +9,7 @@
     \
     PYTHONWRAPPER_USER_CATCH \
     \
-    catch (const py::exception& e) \
+    catch (const py::exception&) \
     { \
     } \
     catch (const std::bad_alloc& e) \
