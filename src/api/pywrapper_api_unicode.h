@@ -366,7 +366,7 @@ static inline ref<PyObject> Unicode_Join(PyObject *separator, PyObject *seq)
     return safe_ref( PyUnicode_Join(separator, seq) );
 }
 
-static inline int Unicode_Tailmatch(PyObject *str, PyObject *substr, Py_ssize_t start, Py_ssize_t end, int direction)
+static inline Py_ssize_t Unicode_Tailmatch(PyObject *str, PyObject *substr, Py_ssize_t start, Py_ssize_t end, int direction)
 {
     return safe_noref( PyUnicode_Tailmatch(str, substr, start, end, direction) );
 }
@@ -409,4 +409,3 @@ static inline int Unicode_Contains(PyObject *container, PyObject *element)
 }
 
 #endif // PYTHONWRAPPER_API_API_UNICODE__H
-

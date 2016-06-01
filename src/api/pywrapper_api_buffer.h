@@ -32,7 +32,7 @@ static inline int Buffer_IsContiguous(Py_buffer *view, char fortran)
     return safe_noref( PyBuffer_IsContiguous(view, fortran) );
 }
 
-static inline void Buffer_FillContiguousStrides(int ndim, Py_ssize_t *shape, Py_ssize_t *strides, Py_ssize_t itemsize, char fortran)
+static inline void Buffer_FillContiguousStrides(int ndim, Py_ssize_t *shape, Py_ssize_t *strides, int itemsize, char fortran)
 {
     PyBuffer_FillContiguousStrides(ndim, shape, strides, itemsize, fortran);
     exception::check();
@@ -101,4 +101,3 @@ static inline ref<PyObject> Buffer_New(Py_ssize_t size)
 }
 
 #endif // PYTHONWRAPPER_API_API_BUFFER__H
-
