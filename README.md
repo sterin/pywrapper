@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sterin/pywrapper.svg?branch=master)](https://travis-ci.org/sterin/pywrapper)
+
 # *pywrapper*
 
 *pywrapper* is a library that tries to make it easier to write C++ code that uses the Python C/API. It tries to make the C++ code as concise as possible, mainly by getting rid of most error-handling code.
