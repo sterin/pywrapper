@@ -6,7 +6,7 @@
 namespace py
 {
 
-static inline void INCREF(PyObject *o)
+static inline void _INCREF(PyObject *o)
 {
     Py_INCREF(o);
     exception::check();
@@ -18,7 +18,7 @@ static inline void XINCREF(PyObject *o)
     exception::check();
 }
 
-static inline void DECREF(PyObject *o)
+static inline void _DECREF(PyObject *o)
 {
     Py_DECREF(o);
     exception::check();

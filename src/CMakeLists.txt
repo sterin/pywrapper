@@ -18,7 +18,10 @@ target_compile_features(
         cxx_uniform_initialization
 )
 
-target_compile_options(pywrapper INTERFACE -Wno-write-strings -Wno-invalid-offsetof)
+if( NOT WIN32 )
+    target_compile_options(pywrapper INTERFACE -Wno-write-strings -Wno-invalid-offsetof)
+endif()
+
 target_include_directories(pywrapper INTERFACE ${PYTHON_INCLUDE_DIRS})
 
 execute_process(COMMAND ${PYTHON_EXECUTABLE}-config --libs OUTPUT_VARIABLE EXTRA_PYTHON_LIBRARIES)
@@ -36,6 +39,10 @@ function(pyabc_python_add_module target type)
 
     if(APPLE AND (type STREQUAL SHARED))
         set_target_properties(${target} PROPERTIES SUFFIX .so)
+    endif()
+
+    if(WIN32 AND (type STREQUAL SHARED))
+        set_target_properties(${target} PROPERTIES SUFFIX .pyd)
     endif()
 
 endfunction()
